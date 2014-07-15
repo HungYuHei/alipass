@@ -2,6 +2,7 @@ require 'alipass/template/content'
 
 module Alipass
   module Template
+
     # REQUIRED_PARAMS = [ :method, :timestamp, :app_id, :version, :sign, :sign_type, :tpl_content]
 
     def self.add(params)

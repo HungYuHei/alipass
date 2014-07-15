@@ -10,7 +10,6 @@ module Alipass
       #   :tpl_id, :tpl_params, :recognition_type, :recognition_info
       # ]
 
-      # tpl_id, tpl_params, recognition_type, recognition_info
       def self.add(params)
         gateway = 'https://openapi.alipay.com/gateway.do'
         params = {
