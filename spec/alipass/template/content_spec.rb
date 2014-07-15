@@ -1,6 +1,14 @@
 require 'spec_helper'
 
 describe Alipass::Template::Content do
+  let(:body) do
+    %Q({"alipay_pass_tpl_add_response":{"success":"T","error_code":"SUCCESS","biz_result":{"serialNumber":"123555123","passId":"32770","result":"SUCCESS"}}})
+  end
+
+  before do
+    FakeWeb.register_uri(:post, 'https://openapi.alipay.com/gateway.do', body: body)
+  end
+
   it ".add" do
     params = {
       tpl_id: 'tpl_id',
@@ -10,6 +18,6 @@ describe Alipass::Template::Content do
     }
 
     json = Alipass::Template::Content.add(params)
-    puts json
+    json['alipay_pass_tpl_add_response']['biz_result']['result'].must_equal 'SUCCESS'
   end
 end
