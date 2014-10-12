@@ -1,11 +1,6 @@
 require 'spec_helper'
 
 describe Alipass::Template do
-  let(:tpl_id) { 'test_tpl_id' }
-  let(:body) do
-    %Q({"alipay_pass_tpl_add_response":{"error_code":"SUCCESS", "result":{"tpl_id":"#{tpl_id}","tpl_params":["title", "begin_at"]}, "success":true}, "sign":"sign"})
-  end
-
   before do
     FakeWeb.register_uri(:post, 'https://openapi.alipay.com/gateway.do', body: body)
   end
@@ -18,18 +13,33 @@ describe Alipass::Template do
       content: pass_json
     }
 
-    json = Alipass::Template.add(tpl_content: params.to_json)
-    json['alipay_pass_tpl_add_response']['result']['tpl_id'].must_equal tpl_id
+    response = Alipass::Template.add(tpl_content: params.to_json)
+    result = response['alipay_pass_tpl_add_response']['result']
+    result.must_be_kind_of String
+
+    json = JSON.parse(result)
+    json['tpl_id'].wont_be_empty
   end
 
-  def pass_json
+  let(:body) do
+    {
+      alipay_pass_tpl_add_response: {
+        result: '{"tpl_id":"tpl_id","tpl_params":["title", "begin_at"]}',
+        error_code: "SUCCESS",
+        success: true
+      },
+      sign: "sign"
+    }.to_json
+  end
+
+  let(:pass_json) do
     {
       evoucherInfo: {
         title: "$title$",
         type: "eventTicket",
         product: "movie",
-        startDate: "2014-07-10 16:16:49",
-        endDate: "2020-12-30 06:06:06",
+        startDate: "$begin_at$",
+        endDate: "$end_at$",
         operation: [
           {
             format: "qrcode",

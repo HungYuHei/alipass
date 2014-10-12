@@ -34,7 +34,7 @@ Alipass::Template.add(
 )
 ```
 
-`tpl_content` 参数比较复杂，请参考[测试代码](https://github.com/HungYuHei/alipass/blob/master/spec/alipass/template_spec.rb)和[数据格式说明](https://openhome.alipay.com/doc/docIndex.htm?url=https://openhome.alipay.com/doc/viewKbDoc.htm?key=236698_261970&type=info)
+`tpl_content` 参数比较复杂，请参考 [测试代码](https://github.com/HungYuHei/alipass/blob/master/spec/alipass/template_spec.rb) 和 [数据格式说明](https://openhome.alipay.com/doc/docIndex.htm?url=https://openhome.alipay.com/doc/viewKbDoc.htm?key=236698_261970&type=info)
 
 ### 模版方式添加卡券
 
@@ -50,6 +50,7 @@ Alipass::Template::Content.add(
 ### Run test
 
 ```
+# Edit spec/spec_helper.rb
 rake test
 ```
 

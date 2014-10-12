@@ -1,10 +1,6 @@
 require 'spec_helper'
 
 describe Alipass::Template::Content do
-  let(:body) do
-    %Q({"alipay_pass_tpl_add_response":{"success":"T","error_code":"SUCCESS","biz_result":{"serialNumber":"123555123","passId":"32770","result":"SUCCESS"}}})
-  end
-
   before do
     FakeWeb.register_uri(:post, 'https://openapi.alipay.com/gateway.do', body: body)
   end
@@ -17,15 +13,30 @@ describe Alipass::Template::Content do
       recognition_info: %Q({"partner_id":"partner_id","out_trade_no":"out_trade_no"})
     }
 
-    json = Alipass::Template::Content.add(params)
-    json['alipay_pass_tpl_add_response']['biz_result']['result'].must_equal 'SUCCESS'
+    response = Alipass::Template::Content.add(params)
+    biz_result = response['alipay_pass_tpl_content_add_response']['biz_result']
+    biz_result.must_be_kind_of String
+
+    json = JSON.parse(biz_result)
+    json['passId'].wont_be_empty
   end
 
-  def tpl_params
+  let(:body) do
     {
-      title: 'xtitlexxxxxx',
-      #startDate: '2014-07-16 20:20',
-      #endDate: '2014-07-17 23:20',
+      alipay_pass_tpl_content_add_response: {
+        biz_result: '{"passId":"passId","serialNumber":"serialNumber","result":"SUCCESS"}',
+        error_code: "SUCCESS",
+        success: true
+      },
+      sign: "sign"
+    }.to_json
+  end
+
+  let(:tpl_params) do
+    {
+      title: 'title',
+      begin_at: '2014-07-16 20:20:00',
+      end_at: '2014-07-17 23:20:00',
       begin_at_date: "2014-07-15",
       begin_at_time: "20:20",
       scene: '场地名',
@@ -42,7 +53,7 @@ describe Alipass::Template::Content do
       perf_url: 'http://youyanchu.com',
       web_tips: '打开网页',
       serial_number: 'serial_number',
-      channel_id: 'channel_id',
+      channel_id: Alipass.app_id,
       web_service_url: 'http://youyanchu.com',
       background_color: 'rgb(165,22,40)'
     }
