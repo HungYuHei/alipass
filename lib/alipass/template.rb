@@ -3,7 +3,10 @@ require 'alipass/template/content'
 module Alipass
   module Template
 
-    # REQUIRED_PARAMS = [ :method, :timestamp, :app_id, :version, :sign, :sign_type, :tpl_content]
+    # REQUIRED_PARAMS = [
+    #   :method, :timestamp, :app_id, :version, :sign, :sign_type,
+    #   :tpl_content, :unique_id
+    # ]
 
     def self.add(params)
       gateway = 'https://openapi.alipay.com/gateway.do'
@@ -13,6 +16,7 @@ module Alipass
         format: 'json',
         app_id: Alipass.app_id,
         version: '1.0',
+        unique_id: SecureRandom.hex,
         sign_type: 'RSA'
       }.merge(params)
 
