@@ -22,9 +22,7 @@ module Alipass
         }.merge(params)
 
         params[:tpl_params].encode!('GBK', { invalid: :replace, undef: :replace, replace: '' })
-
-        sign = Sign.generate(params)
-        params.merge!(sign: sign)
+        params[:sign] = Sign.generate(params)
 
         RestClient.post(gateway, params) do |response|
           JSON.parse(response.body)
