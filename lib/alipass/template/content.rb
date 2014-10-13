@@ -21,7 +21,7 @@ module Alipass
           version: '1.0'
         }.merge(params)
 
-        params[:tpl_params] = params[:tpl_params].encode('GBK') if params[:tpl_params]
+        params[:tpl_params].encode!('GBK', { invalid: :replace, undef: :replace, replace: '' })
 
         sign = Sign.generate(params)
         params.merge!(sign: sign)

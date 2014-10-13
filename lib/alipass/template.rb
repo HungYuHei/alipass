@@ -20,7 +20,7 @@ module Alipass
         sign_type: 'RSA'
       }.merge(params)
 
-      params[:tpl_content] = params[:tpl_content].encode('GBK') if params[:tpl_content]
+      params[:tpl_content].encode!('GBK', { invalid: :replace, undef: :replace, replace: '' })
 
       sign = Sign.generate(params)
       params.merge!(sign: sign)
