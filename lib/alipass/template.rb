@@ -7,7 +7,6 @@ module Alipass
     #   :method, :timestamp, :app_id, :version, :sign, :sign_type,
     #   :tpl_content, :unique_id
     # ]
-
     def self.add(params)
       gateway = 'https://openapi.alipay.com/gateway.do'
       params = {
@@ -20,7 +19,7 @@ module Alipass
         sign_type: 'RSA'
       }.merge(params)
 
-      params[:tpl_content].encode!('GBK', { invalid: :replace, undef: :replace, replace: '' })
+      params[:tpl_content].encode!('GBK', invalid: :replace, undef: :replace, replace: '')
       params[:sign] = Sign.generate(params)
 
       RestClient.post(gateway, params) do |response|
